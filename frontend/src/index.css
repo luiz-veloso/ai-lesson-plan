@@ -1,0 +1,58 @@
+:root {
+  --bg: #f6f7fb;
+  --panel-bg: #ffffff;
+  --border: #e8e9f1;
+  --text: #344054;
+  --text-secondary: #667085;
+  --text-h: #101828;
+  --accent: #7c3aed;
+  --button-bg: #f9fafb;
+  --input-bg: #ffffff;
+  --tag-bg: #eef2ff;
+  --danger-bg: #ef4444;
+  --error-bg: #ffe4e6;
+  --error-text: #b91c1c;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --shadow: rgba(15, 23, 42, 0.08) 0 16px 32px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+strong {
+  color: var(--text-h);
+}
+
+@media (max-width: 760px) {
+  :root {
+    font-size: 15px;
+  }
+}
