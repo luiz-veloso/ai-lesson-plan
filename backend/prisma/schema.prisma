@@ -3,26 +3,24 @@
 
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-}
-
-// ... restante do model LessonPlan (mantenha como estava)
-
 model LessonPlan {
-  id              String   @id @default(uuid())
-  title           String   // Título da Aula
-  objective       String   // Objetivo
-  abstract        String   // Ementa/Resumo
-  expectedDate    DateTime // Data Prevista
-  discipline      String   // Disciplina
-  contents        String[] // Conteúdos (Array de strings suportado pelo Postgres)
-  supportResources String[] // Recursos de Apoio
-  tags            String[] // Tags
-  createdAt       DateTime @default(now()) // Para ordenação por data de cadastro
-  updatedAt       DateTime @updatedAt
+  id               String   @id @default(uuid())
+  title            String
+  objective        String
+  abstract         String
+  expectedDate     DateTime
+  discipline       String
+  contents         String   // No SQLite guardamos como String simples (ex: textos separados por vírgula ou JSON)
+  supportResources String   
+  tags             String   
+  createdAt        DateTime @default(now())
 }

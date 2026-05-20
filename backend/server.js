@@ -3,22 +3,13 @@ import rotasIA from './routes/ia.js';
 import express from 'express';
 import cors from 'cors';
 import rotasPlanos from './routes/planos.js';
+import 'dotenv/config'
 
 const app = express();
 
-// parte complicada do prisma 7+ com PG, usando o adapter oficial
-
 import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
-import pg from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-
-// Cria a conexão direta usando o pacote nativo do PG
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-
-// Passa o adapter para o PrismaClient (exigência do Prisma 7+)
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 /////////////////////////////////////////////////////////////////////////////
 

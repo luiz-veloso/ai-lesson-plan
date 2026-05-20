@@ -40,25 +40,37 @@ router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 10, discipline, tags, title } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
+    const tagFilters = tags ? tags.split(',').map((item) => item.trim().toLowerCase()).filter(Boolean) : [];
 
-    // Constrói os filtros dinamicamente
+    // Constrói os filtros dinâmicos para os campos suportados pelo SQLite
     const where = {
       ...(discipline && { discipline: { contains: discipline, mode: 'insensitive' } }),
       ...(title && { title: { contains: title, mode: 'insensitive' } }),
-      ...(tags && { tags: { hasSome: tags.split(',') } }), // Ex: ?tags=React,Node
     };
 
-    const [planos, total] = await Promise.all([
-      prisma.lessonPlan.findMany({
-        where,
-        skip,
-        take: Number(limit),
-        orderBy: { createdAt: 'desc' }, // Ordenação padrão por data de cadastro
-      }),
-      prisma.lessonPlan.count({ where }),
-    ]);
+    const planos = await prisma.lessonPlan.findMany({
+      where,
+      orderBy: { createdAt: 'desc' }, // Ordenação padrão por data de cadastro
+    });
 
-    res.json({ data: planos, total, page: Number(page), totalPages: Math.ceil(total / limit) });
+    const filteredPlanos = tagFilters.length
+      ? planos.filter((plano) => {
+          const planoTags = Array.isArray(plano.tags)
+            ? plano.tags.map((tag) => String(tag).toLowerCase())
+            : [];
+          return tagFilters.every((tag) => planoTags.includes(tag));
+        })
+      : planos;
+
+    const total = filteredPlanos.length;
+    const pagedPlanos = filteredPlanos.slice(skip, skip + Number(limit));
+
+    res.json({
+      data: pagedPlanos,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
